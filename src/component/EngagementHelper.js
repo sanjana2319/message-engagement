@@ -4,12 +4,10 @@ export const engagementMessageOverTimeChartOptions = (
   messageCountList,
   channels
 ) => {
-  const updatedMessageList = messageCountList.map((items) => {
-    return {
-      ...items,
-      count: Number(items.count),
-    };
-  });
+  const updatedMessageList = messageCountList.map((items) => ({
+    ...items,
+    count: Number(items.count),
+  }));
 
   const filteredChannels = channels.filter((channel) =>
     updatedMessageList.some((data) => data.channelId === channel.id)
@@ -19,23 +17,19 @@ export const engagementMessageOverTimeChartOptions = (
     channels.some((channel) => channel.id === data.channelId)
   );
 
-  // Data for the chart
   const seriesData = filteredChannels.map((channel) => {
     const filteredData = filterMessageData.filter(
       (data) => data.channelId === channel.id
     );
 
-    const data = filteredData.map((data) => {
-      return {
-        x: new Date(data.timeBucket).getTime(),
-        y: data.count,
-      };
-    });
+    const data = filteredData.map((data) => ({
+      x: new Date(data.timeBucket).getTime(),
+      y: data.count,
+    }));
 
     return { name: channel.name, data };
   });
 
-  // Options object for Highcharts
   const options = {
     chart: {
       type: "spline",
@@ -55,7 +49,6 @@ export const engagementMessageOverTimeChartOptions = (
           color: "white",
         },
         formatter: function () {
-          console.log("this.value", this.value);
           return formattedDate(this.value);
         },
       },
